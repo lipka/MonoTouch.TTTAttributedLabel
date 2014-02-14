@@ -37,13 +37,15 @@ Add `bindings/MonoTouch.TTTAttributedLabel.dll` to your project and you are all 
 
 ## Requirements
 
-MonoTouch.TTTAttributedLabel is tested on iOS7, but should be compatible with the original TTTAttributedLabel requirements.
+MonoTouch.TTTAttributedLabel is tested on iOS7, but should be compatible with the original [TTTAttributedLabel](https://github.com/mattt/TTTAttributedLabel) requirements.
 
 ## TODO
 
 * Better set text API to allow native strings
 * Support NSTextCheckingResults
 * Remove NSTextCheckingTypes enum
+* Samples
+* Documentation
 
 Pull requests welcome!
 
