@@ -1,4 +1,4 @@
 using System;
 using MonoTouch.ObjCRuntime;
 
-[assembly: LinkWith ("libTTTAttributedLabel.a", LinkTarget.Simulator | LinkTarget.ArmV7, ForceLoad = true)]
+[assembly: LinkWith ("libTTTAttributedLabel.a", LinkTarget.Simulator | LinkTarget.ArmV7 | LinkTarget.ArmV7s, Frameworks = "CoreGraphics CoreText QuartzCore", ForceLoad = true)]
