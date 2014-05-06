@@ -117,7 +117,7 @@ namespace MonoTouch.TTTAttributedLabel {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Model]
+	[Model][Protocol]
 	public partial interface TTTAttributedLabelDelegate {
 
 		[Export ("attributedLabel:didSelectLinkWithURL:")]
