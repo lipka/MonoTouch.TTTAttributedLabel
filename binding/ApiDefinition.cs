@@ -1,10 +1,10 @@
 using System.Drawing;
 using System;
 
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.CoreFoundation;
-using MonoTouch.UIKit;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using UIKit;
 
 namespace MonoTouch.TTTAttributedLabel {
 
