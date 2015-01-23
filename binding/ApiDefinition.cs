@@ -7,10 +7,10 @@ using CoreFoundation;
 using UIKit;
 using CoreGraphics;
 
+/*
 namespace Foundation
 {
     // Copied from MonoMac repository, https://github.com/mono/monomac
-
     [BaseType(typeof(NSObject))]
     [DisableDefaultCtor] // An uncaught exception was raised: *** -range cannot be sent to an abstract object of class NSTextCheckingResult: Create a concrete instance!
     public interface NSTextCheckingResult
@@ -22,6 +22,7 @@ namespace Foundation
         NSRange Range { get; }
     }
 }
+*/
 
 namespace MonoTouch.TTTAttributedLabel
 {
@@ -83,10 +84,10 @@ namespace MonoTouch.TTTAttributedLabel
         [Export("enabledTextCheckingTypes")]
         NSTextCheckingTypes EnabledTextCheckingTypes { get; set; }
 
-        // FIXME NSTextCheckingResult
+        // TODO: NSTextCheckingResult
         // No bindings found in Xamarin.iOS
-        [Export("links", ArgumentSemantic.Strong)]       
-        NSTextCheckingResult [] Links { get; }
+        //[Export("links", ArgumentSemantic.Strong)]
+        //NSTextCheckingResult [] Links { get; }
 
         [Export("linkAttributes", ArgumentSemantic.Strong)]
         NSDictionary LinkAttributes { get; set; }
@@ -166,11 +167,13 @@ namespace MonoTouch.TTTAttributedLabel
         [New]
         NSAttributedString AttributedText { get; set; }
 
-        [Export("addLinkWithTextCheckingResult:")]
-        void AddLinkWithTextCheckingResult(NSTextCheckingResult result);
+        // TODO: NSTextCheckingResult
+        //[Export("addLinkWithTextCheckingResult:")]
+        //void AddLinkWithTextCheckingResult(NSTextCheckingResult result);
 
-        [Export("addLinkWithTextCheckingResult:attributes:")]
-        void AddLinkWithTextCheckingResult(NSTextCheckingResult result, NSDictionary attributes);
+        // TODO: NSTextCheckingResult
+        //[Export("addLinkWithTextCheckingResult:attributes:")]
+        //void AddLinkWithTextCheckingResult(NSTextCheckingResult result, NSDictionary attributes);
 
         [Export("addLinkToURL:withRange:")]
         void AddLinkToURL(NSUrl url, NSRange range);
@@ -218,7 +221,8 @@ namespace MonoTouch.TTTAttributedLabel
         [Export("attributedLabel:didSelectLinkWithTransitInformation:")]
         void DidSelectLinkWithTransitInformation(TTTAttributedLabel label, NSDictionary components);
 
-        [Export("attributedLabel:didSelectLinkWithTextCheckingResult:")]
-        void DidSelectLinkWithTextCheckingResult(TTTAttributedLabel label, NSTextCheckingResult result);
+        // TODO: NSTextCheckingResult
+        //[Export("attributedLabel:didSelectLinkWithTextCheckingResult:")]
+        //void DidSelectLinkWithTextCheckingResult(TTTAttributedLabel label, NSTextCheckingResult result);
     }
 }

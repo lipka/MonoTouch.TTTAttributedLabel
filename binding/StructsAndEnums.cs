@@ -1,6 +1,6 @@
 using System;
 
-
+/*
 namespace Foundation
 {
     // Copied from MonoMac repository, https://github.com/mono/monomac
@@ -18,6 +18,7 @@ namespace Foundation
         Correction = 1 << 9
     }
 }
+*/
 
 namespace MonoTouch.TTTAttributedLabel
 {
