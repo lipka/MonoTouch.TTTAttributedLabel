@@ -5,52 +5,88 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using UIKit;
+using CoreGraphics;
+
+namespace Foundation
+{
+    // Copied from MonoMac repository, https://github.com/mono/monomac
+
+    [BaseType(typeof(NSObject))]
+    [DisableDefaultCtor] // An uncaught exception was raised: *** -range cannot be sent to an abstract object of class NSTextCheckingResult: Create a concrete instance!
+    public interface NSTextCheckingResult
+    {
+        [Export("resultType")]
+        NSTextCheckingType ResultType { get; }
+
+        [Export("range")]
+        NSRange Range { get; }
+    }
+}
 
 namespace MonoTouch.TTTAttributedLabel
 {
 
-    public delegate NSAttributedString TTTAttributedLabelSetTextDelegate(NSAttributedString s);
+
+
+
+
+    public delegate NSMutableAttributedString TTTAttributedLabelSetTextDelegate(NSMutableAttributedString mutableAttributedString);
 
     [BaseType(typeof(UILabel))]
     public partial interface TTTAttributedLabel
     {
-        [Field("TTTBackgroundCornerRadiusAttributeName", "__Internal")]
-        NSString TTTBackgroundCornerRadius { get; set; }
 
-        [Field("TTTBackgroundFillColorAttributeName", "__Internal")]
-        NSString TTTBackgroundFillColor { get; set; }
-
-        [Field("TTTBackgroundFillPaddingAttributeName", "__Internal")]
-        NSString TTTBackgroundFillPadding { get; set; }
-
-        [Field("TTTBackgroundLineWidthAttributeName", "__Internal")]
-        NSString TTTBackgroundLineWidth { get; set; }
-
-        [Field("TTTBackgroundStrokeColorAttributeName", "__Internal")]
-        NSString TTTBackgroundStrokeColor { get; set; }
-
+        //kTTTStrikeOutAttributeName
         [Field("TTTStrikeOutAttributeName", "__Internal")]
-        NSString TTTStrikeOut { get; set; }
+        NSString StrikeOut { get; }
+
+        //kTTTBackgroundFillColorAttributeName
+        [Field("TTTBackgroundFillColorAttributeName", "__Internal")]
+        NSString BackgroundFillColor { get; }
+
+        //kTTTBackgroundFillPaddingAttributeName
+        [Field("TTTBackgroundFillPaddingAttributeName", "__Internal")]
+        NSString BackgroundFillPadding { get; }
+
+        //kTTTBackgroundStrokeColorAttributeName
+        [Field("TTTBackgroundStrokeColorAttributeName", "__Internal")]
+        NSString BackgroundStrokeColor { get; }
+
+        //kTTTBackgroundLineWidthAttributeName
+        [Field("TTTBackgroundLineWidthAttributeName", "__Internal")]
+        NSString BackgroundLineWidth { get; }
+
+        //kTTTBackgroundCornerRadiusAttributeName
+        [Field("TTTBackgroundCornerRadiusAttributeName", "__Internal")]
+        NSString BackgroundCornerRadius { get; }
 
 
-        [Export("text", ArgumentSemantic.Copy)]
-        [New]
-        NSObject Text { get; set; }
+
+        //// Override UILabel @property to accept both NSString and NSAttributedString
+        // @bug Setting `attributedText` directly is not recommended, as it may cause a crash when attempting to access
+        // any links previously set. Instead, call `setText:`, passing an `NSAttributedString`.
+      
+        // Removed, if you want to set a NSAttributedString use SetText instead.
+
+        //[Export("text", ArgumentSemantic.Copy)]
+        //[New]
+        //NSObject Text { get; set; }
 
 
         [Export("delegate", ArgumentSemantic.Assign)]
         TTTAttributedLabelDelegate Delegate { get; set; }
 
-        // Deprected
-        //[Export("dataDetectorTypes")]
-        //NSTextCheckingTypes DataDetectorTypes { get; set; }
+        [Obsolete]
+        [Export("dataDetectorTypes")]
+        NSTextCheckingTypes DataDetectorTypes { get; set; }
 
         [Export("enabledTextCheckingTypes")]
         NSTextCheckingTypes EnabledTextCheckingTypes { get; set; }
 
         // FIXME NSTextCheckingResult
-        //[Export("links", ArgumentSemantic.Strong)]
-        //NSTextCheckingResult [] Links { get; }
+        // No bindings found in Xamarin.iOS
+        [Export("links", ArgumentSemantic.Strong)]       
+        NSTextCheckingResult [] Links { get; }
 
         [Export("linkAttributes", ArgumentSemantic.Strong)]
         NSDictionary LinkAttributes { get; set; }
@@ -60,6 +96,9 @@ namespace MonoTouch.TTTAttributedLabel
 
         [Export("inactiveLinkAttributes", ArgumentSemantic.Strong)]
         NSDictionary InactiveLinkAttributes { get; set; }
+
+        [Export("linkBackgroundEdgeInset", ArgumentSemantic.Assign)]
+        UIEdgeInsets LinkBackgroundEdgeInset { get; set; }
 
         [Export("shadowRadius", ArgumentSemantic.Assign)]
         float ShadowRadius { get; set; }
@@ -79,9 +118,9 @@ namespace MonoTouch.TTTAttributedLabel
         [Export("firstLineIndent", ArgumentSemantic.Assign)]
         float FirstLineIndent { get; set; }
 
-        // Deprected
-        //[Export("leading")]
-        //float Leading { get; set; }
+        [Obsolete]
+        [Export("leading")]
+        float Leading { get; set; }
 
         [Export("lineSpacing", ArgumentSemantic.Assign)]
         float LineSpacing { get; set; }
@@ -101,35 +140,37 @@ namespace MonoTouch.TTTAttributedLabel
         [Export("verticalAlignment", ArgumentSemantic.Assign)]
         TTTAttributedLabelVerticalAlignment VerticalAlignment { get; set; }
 
+        [Obsolete]
         [Export("truncationTokenString", ArgumentSemantic.Strong)]
         string TruncationTokenString { get; set; }
 
+        [Obsolete]
         [Export("truncationTokenStringAttributes", ArgumentSemantic.Strong)]
         NSDictionary TruncationTokenStringAttributes { get; set; }
+
+        [Export("attributedTruncationToken", ArgumentSemantic.Strong)]
+        NSAttributedString AttributedTruncationToken { get; set; }
 
         [Static, Export("sizeThatFitsAttributedString:withConstraints:limitedToNumberOfLines:")]
         SizeF SizeThatFitsAttributedString(NSAttributedString attributedString, SizeF size, uint numberOfLines);
 
-        //[Export ("text"), Verify ("ObjC method massaged into setter property", "/Users/lipka/projects/_thirdparty/TTTAttributedLabel/TTTAttributedLabel/TTTAttributedLabel.h", Line = 253)]
-        //NSObject Text { set; }
+        // @bug Setting `attributedText` directly is not recommended, as it may cause a crash when attempting to access
+        // any links previously set. Instead, call `setText:`, passing an `NSAttributedString`.
+        [Export("setText:")]
+        void SetText(NSObject text);
 
-        ////Export("setText:")]
-        // void SetText(NSObject text);
-
-        // [Export("setText:afterInheritingLabelAttributesAndConfiguringWithBlock:")]
-        // void SetText(NSObject text, TTTAttributedLabelSetTextDelegate block);
+        [Export("setText:afterInheritingLabelAttributesAndConfiguringWithBlock:")]
+        void SetText(NSObject text, TTTAttributedLabelSetTextDelegate block);
 
         [Export("attributedText", ArgumentSemantic.Copy)]
         [New]
         NSAttributedString AttributedText { get; set; }
 
-        // FIXME NSTextCheckingResult
-        //[Export ("addLinkWithTextCheckingResult:")]
-        //void AddLinkWithTextCheckingResult (NSTextCheckingResult result);
+        [Export("addLinkWithTextCheckingResult:")]
+        void AddLinkWithTextCheckingResult(NSTextCheckingResult result);
 
-        // FIXME NSTextCheckingResult
-        //[Export ("addLinkWithTextCheckingResult:attributes:")]
-        //void AddLinkWithTextCheckingResult (NSTextCheckingResult result, NSDictionary attributes);
+        [Export("addLinkWithTextCheckingResult:attributes:")]
+        void AddLinkWithTextCheckingResult(NSTextCheckingResult result, NSDictionary attributes);
 
         [Export("addLinkToURL:withRange:")]
         void AddLinkToURL(NSUrl url, NSRange range);
@@ -148,6 +189,10 @@ namespace MonoTouch.TTTAttributedLabel
 
         [Export("addLinkToTransitInformation:withRange:")]
         void AddLinkToTransitInformation(NSDictionary components, NSRange range);
+
+        [Export("containslinkAtPoint:")]
+        bool ContainslinkAtPoint(CGPoint point);
+
     }
 
     [BaseType(typeof(NSObject))]
@@ -173,17 +218,7 @@ namespace MonoTouch.TTTAttributedLabel
         [Export("attributedLabel:didSelectLinkWithTransitInformation:")]
         void DidSelectLinkWithTransitInformation(TTTAttributedLabel label, NSDictionary components);
 
-        // FIXME NSTextCheckingResult
-        //[Export ("attributedLabel:didSelectLinkWithTextCheckingResult:")]
-        //void DidSelectLinkWithTextCheckingResult (TTTAttributedLabel label, NSTextCheckingResult result);
+        [Export("attributedLabel:didSelectLinkWithTextCheckingResult:")]
+        void DidSelectLinkWithTextCheckingResult(TTTAttributedLabel label, NSTextCheckingResult result);
     }
-
-    /*
-    [BaseType(typeof(NSObject))]
-    public partial interface NSTextCheckingResult
-    {
-
-    }
-    */
-
 }

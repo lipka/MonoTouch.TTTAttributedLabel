@@ -1,17 +1,17 @@
 // TTTAttributedLabel.h
 //
 // Copyright (c) 2011 Mattt Thompson (http://mattt.me)
-//
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -119,7 +119,7 @@ IB_DESIGNABLE
 
 /**
  A bitmask of `NSTextCheckingType` which are used to automatically detect links in the label text.
- 
+
  @warning You must specify `enabledTextCheckingTypes` before setting the `text`, with either `setText:` or `setText:afterInheritingLabelAttributesAndConfiguringWithBlock:`.
  */
 @property (nonatomic, assign) NSTextCheckingTypes enabledTextCheckingTypes;
@@ -156,19 +156,19 @@ IB_DESIGNABLE
 ///---------------------------------------
 
 /**
- The shadow blur radius for the label. A value of 0 indicates no blur, while larger values produce correspondingly larger blurring. This value must not be negative. The default value is 0.
+ The shadow blur radius for the label. A value of 0 indicates no blur, while larger values produce correspondingly larger blurring. This value must not be negative. The default value is 0. 
  */
 @property (nonatomic, assign) IBInspectable CGFloat shadowRadius;
 
-/**
+/** 
  The shadow blur radius for the label when the label's `highlighted` property is `YES`. A value of 0 indicates no blur, while larger values produce correspondingly larger blurring. This value must not be negative. The default value is 0.
  */
 @property (nonatomic, assign) IBInspectable CGFloat highlightedShadowRadius;
-/**
+/** 
  The shadow offset for the label when the label's `highlighted` property is `YES`. A size of {0, 0} indicates no offset, with positive values extending down and to the right. The default size is {0, 0}.
  */
 @property (nonatomic, assign) IBInspectable CGSize highlightedShadowOffset;
-/**
+/** 
  The shadow color for the label when the label's `highlighted` property is `YES`. The default value is `nil` (no shadow color).
  */
 @property (nonatomic, strong) IBInspectable UIColor *highlightedShadowColor;
@@ -183,7 +183,7 @@ IB_DESIGNABLE
 ///--------------------------------------------
 
 /**
- The distance, in points, from the leading margin of a frame to the beginning of the paragraph's first line. This value is always nonnegative, and is 0.0 by default.
+ The distance, in points, from the leading margin of a frame to the beginning of the paragraph's first line. This value is always nonnegative, and is 0.0 by default. 
  */
 @property (nonatomic, assign) IBInspectable CGFloat firstLineIndent;
 
@@ -215,7 +215,7 @@ IB_DESIGNABLE
 /**
  The distance, in points, from the margin to the text container. This value is `UIEdgeInsetsZero` by default.
  
- @discussion The `UIEdgeInset` members correspond to paragraph style properties rather than a particular geometry, and can change depending on the writing direction.
+ @discussion The `UIEdgeInset` members correspond to paragraph style properties rather than a particular geometry, and can change depending on the writing direction. 
  
  ## `UIEdgeInset` Member Correspondence With `CTParagraphStyleSpecifier` Values:
  
@@ -251,14 +251,6 @@ IB_DESIGNABLE
  */
 @property (nonatomic, strong) IBInspectable NSAttributedString *attributedTruncationToken;
 
-///--------------------------
-/// @name Long press gestures
-///--------------------------
-
-/**
- *  The long-press gesture recognizer used internally by the label.
- */
-@property (nonatomic, strong, readonly) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 ///--------------------------------------------
 /// @name Calculating Size of Attributed String
@@ -266,7 +258,7 @@ IB_DESIGNABLE
 
 /**
  Calculate and return the size that best fits an attributed string, given the specified constraints on size and number of lines.
- 
+
  @param attributedString The attributed string.
  @param size The maximum dimensions used to calculate size.
  @param numberOfLines The maximum number of lines in the text to draw, if the constraining size cannot accomodate the full attributed string.
@@ -285,7 +277,7 @@ IB_DESIGNABLE
  Sets the text displayed by the label.
  
  @param text An `NSString` or `NSAttributedString` object to be displayed by the label. If the specified text is an `NSString`, the label will display the text like a `UILabel`, inheriting the text styles of the label. If the specified text is an `NSAttributedString`, the label text styles will be overridden by the styles specified in the attributed string.
- 
+  
  @discussion This method overrides `UILabel -setText:` to accept both `NSString` and `NSAttributedString` objects. This string is `nil` by default.
  */
 - (void)setText:(id)text;
@@ -345,7 +337,7 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
  @param addressComponents A dictionary of address components for the address to be linked to
  @param range The range in the label text of the link. The range must not exceed the bounds of the receiver.
  
- @discussion The address component dictionary keys are described in `NSTextCheckingResult`'s "Keys for Address Components."
+ @discussion The address component dictionary keys are described in `NSTextCheckingResult`'s "Keys for Address Components." 
  */
 - (void)addLinkToAddress:(NSDictionary *)addressComponents
                withRange:(NSRange)range;
@@ -383,7 +375,7 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
 
 /**
  Adds a link to transit information for a specified range in the label text.
- 
+
  @param components A dictionary containing the transit components. The currently supported keys are `NSTextCheckingAirlineKey` and `NSTextCheckingFlightKey`.
  @param range The range in the label text of the link. The range must not exceed the bounds of the receiver.
  */
@@ -462,7 +454,7 @@ didSelectLinkWithPhoneNumber:(NSString *)phoneNumber;
 
 /**
  Tells the delegate that the user did select a link to transit information
- 
+
  @param label The label whose link was selected.
  @param components A dictionary containing the transit components. The currently supported keys are `NSTextCheckingAirlineKey` and `NSTextCheckingFlightKey`.
  */
@@ -479,100 +471,5 @@ didSelectLinkWithTransitInformation:(NSDictionary *)components;
  */
 - (void)attributedLabel:(TTTAttributedLabel *)label
 didSelectLinkWithTextCheckingResult:(NSTextCheckingResult *)result;
-
-///---------------------------------
-/// @name Responding to Long Presses
-///---------------------------------
-
-/**
- *  Long-press delegate methods include the CGPoint tapped within the label's coordinate space.
- *  This may be useful on iPad to present a popover from a specific origin point.
- */
-
-/**
- Tells the delegate that the user long-pressed a link to a URL.
- 
- @param label The label whose link was long pressed.
- @param url The URL for the link.
- @param point the point pressed, in the label's coordinate space
- */
-- (void)attributedLabel:(TTTAttributedLabel *)label
-didLongPressLinkWithURL:(NSURL *)url
-                atPoint:(CGPoint)point;
-
-/**
- Tells the delegate that the user long-pressed a link to an address.
- 
- @param label The label whose link was long pressed.
- @param addressComponents The components of the address for the link.
- @param point the point pressed, in the label's coordinate space
- */
-- (void)attributedLabel:(TTTAttributedLabel *)label
-didLongPressLinkWithAddress:(NSDictionary *)addressComponents
-                atPoint:(CGPoint)point;
-
-/**
- Tells the delegate that the user long-pressed a link to a phone number.
- 
- @param label The label whose link was long pressed.
- @param phoneNumber The phone number for the link.
- @param point the point pressed, in the label's coordinate space
- */
-- (void)attributedLabel:(TTTAttributedLabel *)label
-didLongPressLinkWithPhoneNumber:(NSString *)phoneNumber
-                atPoint:(CGPoint)point;
-
-
-/**
- Tells the delegate that the user long-pressed a link to a date.
- 
- @param label The label whose link was long pressed.
- @param date The date for the selected link.
- @param point the point pressed, in the label's coordinate space
- */
-- (void)attributedLabel:(TTTAttributedLabel *)label
-didLongPressLinkWithDate:(NSDate *)date
-                atPoint:(CGPoint)point;
-
-
-/**
- Tells the delegate that the user long-pressed a link to a date with a time zone and duration.
- 
- @param label The label whose link was long pressed.
- @param date The date for the link.
- @param timeZone The time zone of the date for the link.
- @param duration The duration, in seconds from the date for the link.
- @param point the point pressed, in the label's coordinate space
- */
-- (void)attributedLabel:(TTTAttributedLabel *)label
-didLongPressLinkWithDate:(NSDate *)date
-               timeZone:(NSTimeZone *)timeZone
-               duration:(NSTimeInterval)duration
-                atPoint:(CGPoint)point;
-
-
-/**
- Tells the delegate that the user long-pressed a link to transit information.
- 
- @param label The label whose link was long pressed.
- @param components A dictionary containing the transit components. The currently supported keys are `NSTextCheckingAirlineKey` and `NSTextCheckingFlightKey`.
- @param point the point pressed, in the label's coordinate space
- */
-- (void)attributedLabel:(TTTAttributedLabel *)label
-didLongPressLinkWithTransitInformation:(NSDictionary *)components
-                atPoint:(CGPoint)point;
-
-/**
- Tells the delegate that the user long-pressed a link to a text checking result.
- 
- @discussion Similar to `-attributedLabel:didSelectLinkWithTextCheckingResult:`, this method is called if a link is long pressed and the delegate does not implement the method corresponding to this type of link.
- 
- @param label The label whose link was long pressed.
- @param result The custom text checking result.
- @param point the point pressed, in the label's coordinate space
- */
-- (void)attributedLabel:(TTTAttributedLabel *)label
-didLongPressLinkWithTextCheckingResult:(NSTextCheckingResult *)result
-                atPoint:(CGPoint)point;
 
 @end
