@@ -1,145 +1,228 @@
 using System.Drawing;
 using System;
 
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.CoreFoundation;
-using MonoTouch.UIKit;
+using ObjCRuntime;
+using Foundation;
+using CoreFoundation;
+using UIKit;
+using CoreGraphics;
 
-namespace MonoTouch.TTTAttributedLabel {
+/*
+namespace Foundation
+{
+    // Copied from MonoMac repository, https://github.com/mono/monomac
+    [BaseType(typeof(NSObject))]
+    [DisableDefaultCtor] // An uncaught exception was raised: *** -range cannot be sent to an abstract object of class NSTextCheckingResult: Create a concrete instance!
+    public interface NSTextCheckingResult
+    {
+        [Export("resultType")]
+        NSTextCheckingType ResultType { get; }
 
-	public delegate NSAttributedString TTTAttributedLabelSetTextDelegate (NSAttributedString s);
+        [Export("range")]
+        NSRange Range { get; }
+    }
+}
+*/
 
-	[BaseType (typeof (UILabel))]
-	public partial interface TTTAttributedLabel {
+namespace MonoTouch.TTTAttributedLabel
+{
 
-		[Export ("delegate", ArgumentSemantic.Assign)]
-		TTTAttributedLabelDelegate Delegate { get; set; }
 
-		[Export ("dataDetectorTypes")]
-		NSTextCheckingTypes DataDetectorTypes { get; set; }
 
-		[Export ("enabledTextCheckingTypes")]
-		NSTextCheckingTypes EnabledTextCheckingTypes { get; set; }
 
-		// FIXME NSTextCheckingResult
-		//[Export ("links", ArgumentSemantic.Retain), Verify ("NSArray may be reliably typed, check the documentation", "/Users/lipka/projects/_thirdparty/TTTAttributedLabel/TTTAttributedLabel/TTTAttributedLabel.h", Line = 123)]
-		//NSObject [] Links { get; }
 
-		[Export ("linkAttributes", ArgumentSemantic.Retain)]
-		NSDictionary LinkAttributes { get; set; }
+    public delegate NSMutableAttributedString TTTAttributedLabelSetTextDelegate(NSMutableAttributedString mutableAttributedString);
 
-		[Export ("activeLinkAttributes", ArgumentSemantic.Retain)]
-		NSDictionary ActiveLinkAttributes { get; set; }
+    [BaseType(typeof(UILabel))]
+    public partial interface TTTAttributedLabel
+    {
 
-		[Export ("inactiveLinkAttributes", ArgumentSemantic.Retain)]
-		NSDictionary InactiveLinkAttributes { get; set; }
+        //kTTTStrikeOutAttributeName
+        [Field("TTTStrikeOutAttributeName", "__Internal")]
+        NSString StrikeOut { get; }
 
-		[Export ("shadowRadius")]
-		float ShadowRadius { get; set; }
+        //kTTTBackgroundFillColorAttributeName
+        [Field("TTTBackgroundFillColorAttributeName", "__Internal")]
+        NSString BackgroundFillColor { get; }
 
-		[Export ("highlightedShadowRadius")]
-		float HighlightedShadowRadius { get; set; }
+        //kTTTBackgroundFillPaddingAttributeName
+        [Field("TTTBackgroundFillPaddingAttributeName", "__Internal")]
+        NSString BackgroundFillPadding { get; }
 
-		[Export ("highlightedShadowOffset", ArgumentSemantic.Assign)]
-		SizeF HighlightedShadowOffset { get; set; }
+        //kTTTBackgroundStrokeColorAttributeName
+        [Field("TTTBackgroundStrokeColorAttributeName", "__Internal")]
+        NSString BackgroundStrokeColor { get; }
 
-		[Export ("highlightedShadowColor", ArgumentSemantic.Retain)]
-		UIColor HighlightedShadowColor { get; set; }
+        //kTTTBackgroundLineWidthAttributeName
+        [Field("TTTBackgroundLineWidthAttributeName", "__Internal")]
+        NSString BackgroundLineWidth { get; }
 
-		[Export ("kern")]
-		float Kern { get; set; }
+        //kTTTBackgroundCornerRadiusAttributeName
+        [Field("TTTBackgroundCornerRadiusAttributeName", "__Internal")]
+        NSString BackgroundCornerRadius { get; }
 
-		[Export ("firstLineIndent")]
-		float FirstLineIndent { get; set; }
 
-		[Export ("leading")]
-		float Leading { get; set; }
 
-		[Export ("lineHeightMultiple")]
-		float LineHeightMultiple { get; set; }
+        //// Override UILabel @property to accept both NSString and NSAttributedString
+        // @bug Setting `attributedText` directly is not recommended, as it may cause a crash when attempting to access
+        // any links previously set. Instead, call `setText:`, passing an `NSAttributedString`.
+      
+        // Removed, if you want to set a NSAttributedString use SetText instead.
 
-		[Export ("textInsets", ArgumentSemantic.Assign)]
-		UIEdgeInsets TextInsets { get; set; }
+        //[Export("text", ArgumentSemantic.Copy)]
+        //[New]
+        //NSObject Text { get; set; }
 
-		[Export ("verticalAlignment")]
-		TTTAttributedLabelVerticalAlignment VerticalAlignment { get; set; }
 
-		[Export ("truncationTokenString", ArgumentSemantic.Retain)]
-		string TruncationTokenString { get; set; }
+        [Export("delegate", ArgumentSemantic.Assign)]
+        TTTAttributedLabelDelegate Delegate { get; set; }
 
-		[Export ("truncationTokenStringAttributes", ArgumentSemantic.Retain)]
-		NSDictionary TruncationTokenStringAttributes { get; set; }
+        [Obsolete]
+        [Export("dataDetectorTypes")]
+        NSTextCheckingTypes DataDetectorTypes { get; set; }
 
-		[Static, Export ("sizeThatFitsAttributedString:withConstraints:limitedToNumberOfLines:")]
-		SizeF SizeThatFitsAttributedString (NSAttributedString attributedString, SizeF size, uint numberOfLines);
+        [Export("enabledTextCheckingTypes")]
+        NSTextCheckingTypes EnabledTextCheckingTypes { get; set; }
 
-		//[Export ("text"), Verify ("ObjC method massaged into setter property", "/Users/lipka/projects/_thirdparty/TTTAttributedLabel/TTTAttributedLabel/TTTAttributedLabel.h", Line = 253)]
-		//NSObject Text { set; }
+        // TODO: NSTextCheckingResult
+        // No bindings found in Xamarin.iOS
+        //[Export("links", ArgumentSemantic.Strong)]
+        //NSTextCheckingResult [] Links { get; }
 
-		[Export ("setText:afterInheritingLabelAttributesAndConfiguringWithBlock:")]
-		void SetText (NSObject text, TTTAttributedLabelSetTextDelegate block);
+        [Export("linkAttributes", ArgumentSemantic.Strong)]
+        NSDictionary LinkAttributes { get; set; }
 
-		[Export ("attributedText", ArgumentSemantic.Copy)]
-		NSAttributedString AttributedText { get; set; }
+        [Export("activeLinkAttributes", ArgumentSemantic.Strong)]
+        NSDictionary ActiveLinkAttributes { get; set; }
 
-		// FIXME NSTextCheckingResult
-		//[Export ("addLinkWithTextCheckingResult:")]
-		//void AddLinkWithTextCheckingResult (NSTextCheckingResult result);
+        [Export("inactiveLinkAttributes", ArgumentSemantic.Strong)]
+        NSDictionary InactiveLinkAttributes { get; set; }
 
-		// FIXME NSTextCheckingResult
-		//[Export ("addLinkWithTextCheckingResult:attributes:")]
-		//void AddLinkWithTextCheckingResult (NSTextCheckingResult result, NSDictionary attributes);
+        [Export("linkBackgroundEdgeInset", ArgumentSemantic.Assign)]
+        UIEdgeInsets LinkBackgroundEdgeInset { get; set; }
 
-		[Export ("addLinkToURL:withRange:")]
-		void AddLinkToURL (NSUrl url, NSRange range);
+        [Export("shadowRadius", ArgumentSemantic.Assign)]
+        float ShadowRadius { get; set; }
 
-		[Export ("addLinkToAddress:withRange:")]
-		void AddLinkToAddress (NSDictionary addressComponents, NSRange range);
+        [Export("highlightedShadowRadius", ArgumentSemantic.Assign)]
+        float HighlightedShadowRadius { get; set; }
 
-		[Export ("addLinkToPhoneNumber:withRange:")]
-		void AddLinkToPhoneNumber (string phoneNumber, NSRange range);
+        [Export("highlightedShadowOffset", ArgumentSemantic.Assign)]
+        SizeF HighlightedShadowOffset { get; set; }
 
-		[Export ("addLinkToDate:withRange:")]
-		void AddLinkToDate (NSDate date, NSRange range);
+        [Export("highlightedShadowColor", ArgumentSemantic.Retain)]
+        UIColor HighlightedShadowColor { get; set; }
 
-		[Export ("addLinkToDate:timeZone:duration:withRange:")]
-		void AddLinkToDate (NSDate date, NSTimeZone timeZone, double duration, NSRange range);
+        [Export("kern", ArgumentSemantic.Assign)]
+        float Kern { get; set; }
 
-		[Export ("addLinkToTransitInformation:withRange:")]
-		void AddLinkToTransitInformation (NSDictionary components, NSRange range);
-	}
+        [Export("firstLineIndent", ArgumentSemantic.Assign)]
+        float FirstLineIndent { get; set; }
 
-	public partial interface TTTAttributedLabel {
+        [Obsolete]
+        [Export("leading")]
+        float Leading { get; set; }
 
-		[Export ("text", ArgumentSemantic.Copy)]
-		NSObject Text { get; set; }
-	}
+        [Export("lineSpacing", ArgumentSemantic.Assign)]
+        float LineSpacing { get; set; }
 
-	[BaseType (typeof (NSObject))]
-	[Model][Protocol]
-	public partial interface TTTAttributedLabelDelegate {
+        [Export("minimumLineHeight", ArgumentSemantic.Assign)]
+        float MinimumLineHeight { get; set; }
 
-		[Export ("attributedLabel:didSelectLinkWithURL:")]
-		void DidSelectLinkWithURL (TTTAttributedLabel label, NSUrl url);
+        [Export("maximumLineHeight", ArgumentSemantic.Assign)]
+        float MaximumLineHeight { get; set; }
 
-		[Export ("attributedLabel:didSelectLinkWithAddress:")]
-		void DidSelectLinkWithAddress (TTTAttributedLabel label, NSDictionary addressComponents);
+        [Export("lineHeightMultiple", ArgumentSemantic.Assign)]
+        float LineHeightMultiple { get; set; }
 
-		[Export ("attributedLabel:didSelectLinkWithPhoneNumber:")]
-		void DidSelectLinkWithPhoneNumber (TTTAttributedLabel label, string phoneNumber);
+        [Export("textInsets", ArgumentSemantic.Assign)]
+        UIEdgeInsets TextInsets { get; set; }
 
-		[Export ("attributedLabel:didSelectLinkWithDate:")]
-		void DidSelectLinkWithDate (TTTAttributedLabel label, NSDate date);
+        [Export("verticalAlignment", ArgumentSemantic.Assign)]
+        TTTAttributedLabelVerticalAlignment VerticalAlignment { get; set; }
 
-		[Export ("attributedLabel:didSelectLinkWithDate:timeZone:duration:")]
-		void DidSelectLinkWithDate (TTTAttributedLabel label, NSDate date, NSTimeZone timeZone, double duration);
+        [Obsolete]
+        [Export("truncationTokenString", ArgumentSemantic.Strong)]
+        string TruncationTokenString { get; set; }
 
-		[Export ("attributedLabel:didSelectLinkWithTransitInformation:")]
-		void DidSelectLinkWithTransitInformation (TTTAttributedLabel label, NSDictionary components);
+        [Obsolete]
+        [Export("truncationTokenStringAttributes", ArgumentSemantic.Strong)]
+        NSDictionary TruncationTokenStringAttributes { get; set; }
 
-		// FIXME NSTextCheckingResult
-		//[Export ("attributedLabel:didSelectLinkWithTextCheckingResult:")]
-		//void DidSelectLinkWithTextCheckingResult (TTTAttributedLabel label, NSTextCheckingResult result);
-	}
+        [Export("attributedTruncationToken", ArgumentSemantic.Strong)]
+        NSAttributedString AttributedTruncationToken { get; set; }
+
+        [Static, Export("sizeThatFitsAttributedString:withConstraints:limitedToNumberOfLines:")]
+        SizeF SizeThatFitsAttributedString(NSAttributedString attributedString, SizeF size, uint numberOfLines);
+
+        // @bug Setting `attributedText` directly is not recommended, as it may cause a crash when attempting to access
+        // any links previously set. Instead, call `setText:`, passing an `NSAttributedString`.
+        [Export("setText:")]
+        void SetText(NSObject text);
+
+        [Export("setText:afterInheritingLabelAttributesAndConfiguringWithBlock:")]
+        void SetText(NSObject text, TTTAttributedLabelSetTextDelegate block);
+
+        [Export("attributedText", ArgumentSemantic.Copy)]
+        [New]
+        NSAttributedString AttributedText { get; set; }
+
+        // TODO: NSTextCheckingResult
+        //[Export("addLinkWithTextCheckingResult:")]
+        //void AddLinkWithTextCheckingResult(NSTextCheckingResult result);
+
+        // TODO: NSTextCheckingResult
+        //[Export("addLinkWithTextCheckingResult:attributes:")]
+        //void AddLinkWithTextCheckingResult(NSTextCheckingResult result, NSDictionary attributes);
+
+        [Export("addLinkToURL:withRange:")]
+        void AddLinkToURL(NSUrl url, NSRange range);
+
+        [Export("addLinkToAddress:withRange:")]
+        void AddLinkToAddress(NSDictionary addressComponents, NSRange range);
+
+        [Export("addLinkToPhoneNumber:withRange:")]
+        void AddLinkToPhoneNumber(string phoneNumber, NSRange range);
+
+        [Export("addLinkToDate:withRange:")]
+        void AddLinkToDate(NSDate date, NSRange range);
+
+        [Export("addLinkToDate:timeZone:duration:withRange:")]
+        void AddLinkToDate(NSDate date, NSTimeZone timeZone, double duration, NSRange range);
+
+        [Export("addLinkToTransitInformation:withRange:")]
+        void AddLinkToTransitInformation(NSDictionary components, NSRange range);
+
+        [Export("containslinkAtPoint:")]
+        bool ContainslinkAtPoint(CGPoint point);
+
+    }
+
+    [BaseType(typeof(NSObject))]
+    [Model][Protocol]
+    public partial interface TTTAttributedLabelDelegate
+    {
+
+        [Export("attributedLabel:didSelectLinkWithURL:")]
+        void DidSelectLinkWithURL(TTTAttributedLabel label, NSUrl url);
+
+        [Export("attributedLabel:didSelectLinkWithAddress:")]
+        void DidSelectLinkWithAddress(TTTAttributedLabel label, NSDictionary addressComponents);
+
+        [Export("attributedLabel:didSelectLinkWithPhoneNumber:")]
+        void DidSelectLinkWithPhoneNumber(TTTAttributedLabel label, string phoneNumber);
+
+        [Export("attributedLabel:didSelectLinkWithDate:")]
+        void DidSelectLinkWithDate(TTTAttributedLabel label, NSDate date);
+
+        [Export("attributedLabel:didSelectLinkWithDate:timeZone:duration:")]
+        void DidSelectLinkWithDate(TTTAttributedLabel label, NSDate date, NSTimeZone timeZone, double duration);
+
+        [Export("attributedLabel:didSelectLinkWithTransitInformation:")]
+        void DidSelectLinkWithTransitInformation(TTTAttributedLabel label, NSDictionary components);
+
+        // TODO: NSTextCheckingResult
+        //[Export("attributedLabel:didSelectLinkWithTextCheckingResult:")]
+        //void DidSelectLinkWithTextCheckingResult(TTTAttributedLabel label, NSTextCheckingResult result);
+    }
 }

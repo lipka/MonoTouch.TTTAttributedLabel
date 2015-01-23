@@ -12,8 +12,18 @@ libTTTAttributedLabel-i386.a:
 libTTTAttributedLabel-armv7.a:
 	$(XBUILD) -project $(PROJECT) -target $(TARGET) -sdk iphoneos -arch armv7 -configuration Release clean build
 	-mv $(PROJECT_ROOT)/build/Release-iphoneos/lib$(TARGET).a $@
+	
+	
+libTTTAttributedLabel-armv7s.a:
+	$(XBUILD) -project $(PROJECT) -target $(TARGET) -sdk iphoneos -arch armv7s -configuration Release clean build
+	-mv $(PROJECT_ROOT)/build/Release-iphoneos/lib$(TARGET).a $@
+	
+	
+libTTTAttributedLabel-arm64.a:
+	$(XBUILD) -project $(PROJECT) -target $(TARGET) -sdk iphoneos -arch arm64 -configuration Release clean build
+	-mv $(PROJECT_ROOT)/build/Release-iphoneos/lib$(TARGET).a $@
 
-libTTTAttributedLabel.a: libTTTAttributedLabel-i386.a libTTTAttributedLabel-armv7.a
+libTTTAttributedLabel.a: libTTTAttributedLabel-i386.a libTTTAttributedLabel-armv7.a libTTTAttributedLabel-armv7s.a libTTTAttributedLabel-arm64.a
 	lipo -create -output $@ $^
 
 clean:

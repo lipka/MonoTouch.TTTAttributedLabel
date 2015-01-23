@@ -1,28 +1,39 @@
 using System;
 
+/*
+namespace Foundation
+{
+    // Copied from MonoMac repository, https://github.com/mono/monomac
+    public enum NSTextCheckingType : ulong
+    {
+        Orthography = 1 << 0,
+        Spelling = 1 << 1,
+        Grammar = 1 << 2,
+        Date = 1 << 3,
+        Address = 1 << 4,
+        Link = 1 << 5,
+        Quote = 1 << 6,
+        Dash = 1 << 7,
+        Replacement = 1 << 8,
+        Correction = 1 << 9
+    }
+}
+*/
+
 namespace MonoTouch.TTTAttributedLabel
 {
-	// FIXME
-	public enum NSTextCheckingTypes : ulong {
-		NSTextCheckingTypeOrthography           = 1ULL << 0,            // language identification
-		NSTextCheckingTypeSpelling              = 1ULL << 1,            // spell checking
-		NSTextCheckingTypeGrammar               = 1ULL << 2,            // grammar checking
-		NSTextCheckingTypeDate                  = 1ULL << 3,            // date/time detection
-		NSTextCheckingTypeAddress               = 1ULL << 4,            // address detection
-		NSTextCheckingTypeLink                  = 1ULL << 5,            // link detection
-		NSTextCheckingTypeQuote                 = 1ULL << 6,            // smart quotes
-		NSTextCheckingTypeDash                  = 1ULL << 7,            // smart dashes
-		NSTextCheckingTypeReplacement           = 1ULL << 8,            // fixed replacements, such as copyright symbol for (c)
-		NSTextCheckingTypeCorrection            = 1ULL << 9,            // autocorrection
-		NSTextCheckingTypeRegularExpression /*		NS_ENUM_AVAILABLE(10_7, 4_0)*/  = 1ULL << 10,           // regular expression matches
-		NSTextCheckingTypePhoneNumber /*		NS_ENUM_AVAILABLE(10_7, 4_0)*/        = 1ULL << 11,           // phone number detection
-		NSTextCheckingTypeTransitInformation /*		NS_ENUM_AVAILABLE(10_7, 4_0)*/ = 1ULL << 12            // transit (e.g. flight) info detection
-	}
+    public enum NSTextCheckingTypes : ulong
+    {
+        NSTextCheckingAllSystemTypes = 0xffffffffULL,
+        NSTextCheckingAllCustomTypes = 0xffffffffULL << 32,
+        NSTextCheckingAllTypes = (0xffffffffULL | 0xffffffffULL << 32)
+    }
 
-	public enum TTTAttributedLabelVerticalAlignment {
-		Center = 0,
-		Top = 1,
-		Bottom = 2
-	}
+    public enum TTTAttributedLabelVerticalAlignment
+    {
+        Center = 0,
+        Top = 1,
+        Bottom = 2
+    }
 }
 
